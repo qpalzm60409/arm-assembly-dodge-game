@@ -1,0 +1,41 @@
+; This scatterloading descriptor file defines:
+; one load region (FLASH) and 3 execution regions
+; (FLASH, 32bitRAM & 16bitRAM)
+;
+; The FLASH resides at 0x04000000.
+; On reset, an aliased copy of FLASH is re-mapped (by hardware) 
+; to address zero.  Following reset, 32bitRAM is mapped to
+; address zero, by the first few instructions in boot.s.
+;
+; 32bitRAM might be fast on-chip (internal) RAM, and is typically
+; used for the stack and code that must be executed quickly.
+; Here, the exception vectors of vectors.s get relocated (copied) 
+; from FLASH to 32bitRAM.
+;
+; 16bitRAM might be slower off-chip (external) DRAM, and is 
+; typically used for less frequently accessed RW variables and 
+; ZI data.  Here, the RW & ZI areas of C_main & C_func get 
+; relocated/initialised to 16bitRAM
+;
+; All other read-only code '* (+RO)' i.e. regioninit & library 
+; code is executed from FLASH
+
+FLASH 0x04000000 0x04000000
+{
+    FLASH 0x04000000
+    {
+        boot.o (Boot,+First)
+        * (+RO)
+    }
+    32bitRAM 0x00000000
+    {
+        vectors.o (Vect,+FIRST)
+    }
+    16bitRAM 0x02080000
+    {
+        C_main.o (+RW,+ZI)
+        C_func.o (+RW,+ZI)
+    }
+}
+
+

@@ -1,0 +1,42 @@
+; 1.1.2.2
+; This scatterloading descriptor file defines:
+; one load region (FLASH) and 3 execution regions
+; (FLASH, SSRAM & SRAM)
+;
+; The FLASH resides at 0x04000000.
+; On reset, an aliased copy of FLASH is re-mapped (by hardware) 
+; to address zero.  Following reset, SSRAM is mapped to
+; address zero, by the first few instructions in boot.s.
+;
+; The SSRAM area might be fast on-chip (internal) RAM, and is
+; typically used for the stack and code that must be executed quickly.
+; Here, the exception vectors (in vectors.s) and interrupt handler
+; (in C_int_handler.c) get relocated (copied) from FLASH to (fast)
+; SSRAM at address 0x000 for speed.
+;
+; SRAM might be slower off-chip (external) DRAM, and is typically
+; used for less frequently accessed RW variables and ZI data.  
+; Here, the RW variables and ZI data of the main program code
+; (in C_main.c) get copied/initialised in SRAM at address 0x2000.
+;
+; All other read-only code '* (+RO)' i.e. regioninit, main program
+; and library code is executed from FLASH
+
+FLASH 0x04000000 0x04000000
+{
+    FLASH 0x04000000
+    {
+        boot.o (Boot, +First)
+        *
+    }
+    SSRAM 0x0000
+    {
+        vectors.o (Vect,+FIRST)
+        C_int_handler.o (+RO)
+    }
+    SRAM 0x2000
+    {
+        C_main.o (+RW,+ZI)
+    }
+}
+

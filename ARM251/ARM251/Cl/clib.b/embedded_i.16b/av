@@ -1,0 +1,2 @@
+-bi -apcs 3/32bit/nofp/noswst -PD "INTERWORK SETL {TRUE}" -PD "embedded SETL {TRUE}" -PD "thumb SETL {TRUE}" 
+-PD "FPIS SETA 3" -PD "LDM_MAX SETA 16" -I..\..,..\..\fpehead,..\..\fplib,..\..\thumb,..\..\embedded -arch 4T 

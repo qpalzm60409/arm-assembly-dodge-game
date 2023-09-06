@@ -1,0 +1,2 @@
+-bi -asd -apcs 3/32bit/softfp/NOINTERWORK/nofp/noswst/narrow -ffah -zr16 
+-c -J..\..\..\include -I..\..,..\..\fplib,..\..\embedded,..\..\stdh -DHOSTSEX_b -DNOINTERWORK -Dembedded -Ospace -arch 3 

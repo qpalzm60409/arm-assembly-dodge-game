@@ -1,0 +1,2 @@
+-bi -apcs 3/32bit/fp/noswst -PD "NOINTERWORK SETL {TRUE}" -PD "angel SETL {TRUE}" -PD "arm SETL {TRUE}" 
+-PD "FPIS SETA 3" -PD "LDM_MAX SETA 16" -I..\..,..\..\fpehead,..\..\fplib,..\..\thumb,..\..\angel -arch 3 

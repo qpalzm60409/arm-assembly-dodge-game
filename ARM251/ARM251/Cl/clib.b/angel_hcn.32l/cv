@@ -1,0 +1,2 @@
+-li -asd -apcs 3/32bit/hardfp/nofpregargs/NOINTERWORK/nofp/noswst/narrow -ffah -zr16 
+-c -J..\..\..\include -I..\..,..\..\fplib,..\..\angel,..\..\stdh -DHOSTSEX_l -DNOINTERWORK -Dangel -Otime -arch 3 

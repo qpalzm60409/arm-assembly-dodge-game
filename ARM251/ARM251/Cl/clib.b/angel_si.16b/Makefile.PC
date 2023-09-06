@@ -1,0 +1,1399 @@
+# makedefs variant for PC's (armmake)
+#
+# RCS $Revision: 1.1.2.1 $
+# Checkin $Date: 1998/08/20 12:33:16 $
+# Revising $Author: tdouglas $
+#
+# Look at options file for inputs of this makefile
+
+
+ARMTOOLS=
+
+
+MAKETOOL=$(ARMTOOLS)armmake
+LD=$(ARMTOOLS)armlink
+ARMLIB=$(ARMTOOLS)armlib
+ARMCC=$(ARMTOOLS)armcc
+TCC=$(ARMTOOLS)tcc
+ARMASM=$(ARMTOOLS)armasm
+TASM=$(ARMTOOLS)tasm
+
+
+
+
+
+
+
+
+LIBTYPE = angel
+LIBNAME = armlib_si.16$(ENDIAN)
+TARGET = thumb
+
+memcpy = fast
+divide = unrolled
+stdfile_redirection = on
+backtrace = off
+stack = contiguous
+fp_type = fplib
+
+PCSZ=32
+ENDIAN=b
+FPIS=3
+FPREGARGS=fpregargs
+FPTYPE=softfp
+LDMLIMIT=16
+INTERWORK=INTERWORK
+APCSA=/nofp/swst
+APCSC=$(APCSA)/narrow
+CC=$(TCC)
+CCFLAGS=-Ospace -arch 4T
+AS=$(TASM)
+ASFLAGS=-arch 4T
+# makedefs variant for PC's (armmake)
+#
+# RCS $Revision: 1.1.2.2 $
+# Checkin $Date: 1998/09/16 19:54:40 $
+# Revising $Author: tdouglas $
+#
+# Look at options file for inputs of this makefile
+
+MKTMP=mktmp
+RM=del
+RENAME=move
+APPEND=type
+MAKEMAKE=..\util\makemake
+DEPLIST=deplist
+BAKFILE=MakeFBak
+CP=copy
+
+# via files are needed because of DOS command-line length restrictions
+CFLAGS=-ffah -via cv
+DCFLAGS=$(CFLAGS) -M
+AFLAGS=-via av 
+DAFLAGS=$(AFLAGS) -D $(MKTMP)
+
+FPE=fpe_$(PCSZ)$(ENDIAN)
+
+via:
+        @echo -$(ENDIAN)i -asd -apcs 3/$(PCSZ)bit/$(FPTYPE)/$(INTERWORK)$(APCSC) -ffah -zr$(LDMLIMIT) > cv
+        @echo -c -J..\..\..\include -I..\..,..\..\fplib,..\..\$(LIBTYPE),..\..\stdh -DHOSTSEX_$(ENDIAN) -D$(INTERWORK) -D$(LIBTYPE) $(CCFLAGS) $(CFL) >> cv
+        @echo -$(ENDIAN)i -apcs 3/$(PCSZ)bit$(APCSA) -PD "$(INTERWORK) SETL {TRUE}" -PD "$(LIBTYPE) SETL {TRUE}" -PD "$(TARGET) SETL {TRUE}" > av
+        @echo -PD "FPIS SETA $(FPIS)" -PD "LDM_MAX SETA $(LDMLIMIT)" -I..\..,..\..\fpehead,..\..\fplib,..\..\thumb,..\..\$(LIBTYPE) $(ASFLAGS) $(AFL) >> av
+
+all:	armlib_si.16$(ENDIAN)
+
+clean:;	-$(RM) armlib_si.16$(ENDIAN) *.o
+
+armlib_si.16$(ENDIAN):	\
+	sys_misc.o sys_open.o sys_write.o sys_error.o sys_seek.o sys_ensure.o\
+	sys_flen.o sys_tmpnam.o sys_wrch.o sys_system.o sys_remove.o\
+	sys_rename.o sys_command.o sys_clock.o suppapp.o oslow.o oshigh.o\
+	malloc.o free.o realloc.o calloc.o stats.o h1_alloc.o h1_extend.o\
+	h1_free.o h1_realloc.o h1_stats.o llneg.o lladd.o llsub.o llrsb.o\
+	llmul.o lladdls.o llsubls.o llrsbls.o lladdlu.o llsublu.o llrsblu.o\
+	llmullu.o llmulls.o lladdss.o llsubss.o llrsbss.o llmulss.o lladduu.o\
+	llsubuu.o llrsbuu.o llmuluu.o llsdiv.o llsrdv.o lludiv.o llurdv.o\
+	llnot.o lland.o llor.o lleor.o llshl.o llushr.o llsshr.o llcmpeq.o\
+	llcmpne.o llucmpgt.o llucmpge.o llucmplt.o llucmple.o llscmpgt.o\
+	llscmpge.o llscmplt.o llscmple.o llfroml.o llfromu.o lltol.o ffltll.o\
+	dfltll.o llsfromd.o llufromd.o llsfromf.o llufromf.o dflt.o fflt.o\
+	ffix.o ffixu.o dfix.o dfixu.o except.o fcheck.o liberror.o fpdata.o\
+	status.o dadd.o dsub.o drsb.o dmul.o ddiv.o drdv.o dsqrt.o eadd.o\
+	esub.o emul.o esquare.o ediv.o erdv.o esqrt.o efix.o efixu.o fadd.o\
+	fmul.o fdiv.o fnorm2.o mul.o addsub.o div.o sqrt.o fix.o fixu.o\
+	normal.o basic.o deqf.o dleqf.o dgeqf.o deq.o dneq.o dls.o dleq.o dgr.o\
+	dgeq.o dcompare.o feqf.o fleqf.o fgeqf.o feq.o fneq.o fls.o fleq.o\
+	fgr.o fgeq.o fcompare.o eeq.o eneq.o els.o eleq.o egr.o egeq.o\
+	ecompare.o d2e.o e2d.o frexp.o ldexp.o floor.o modf.o fmod.o nans.o\
+	d2f.o f2d.o e2f.o norm_op1.o norm_op2.o eflt.o efltu.o e2e.o range.o\
+	poly.o poly0.o poly1.o exp.o _exp.o log.o log10.o _log.o sin.o cos.o\
+	_sincos.o tan.o atan.o atan2.o _atnpol.o asin.o acos.o _asnacs.o sinh.o\
+	cosh.o tanh.o pow.o __fp_con.o mabs.o mdiv.o mlabs.o mldiv.o ctype.o\
+	isalnum.o isalpha.o iscntrl.o isdigit.o isgraph.o islower.o isprint.o\
+	ispunct.o isspace.o isupper.o isxdigit.o tolower.o toupper.o _sputc.o\
+	sprintf.o vsprintf.o _sprintf.o __vfpntf.o nofpdisp.o _vfprntf.o\
+	_vsprntf.o _chval.o _fp_disp.o _scanf.o sgetc.o _strtoul.o strtod.o\
+	strtol.o strtoul.o sscanf.o atof.o atoi.o atol.o _set8859.o xmath.o\
+	image.o fprintf.o printf.o vfprintf.o vprintf.o _printf.o _fprintf.o\
+	scanf.o fscanf.o backspce.o clearerr.o feof.o ferror.o fflush.o fgetc.o\
+	fgetpos.o fgets.o fisatty.o filbuf.o flsbuf.o fputc.o fputs.o fread.o\
+	fseek.o fsetpos.o ftell.o fwrite.o getc.o getchar.o gets.o osf.o\
+	perror.o putc.o putchar.o puts.o rewind.o setbuf.o setvbuf.o stdio.o\
+	tmpnam.o ungetc.o _sys_msg.o __dup.o rand.o ansirand.o atexit.o exit.o\
+	abort.o _version.o signal.o assert.o locale.o localecv.o _lc.o mblen.o\
+	mbtowc.o wctomb.o mbstowcs.o wcstombs.o qsort.o bsearch.o memcmp.o\
+	memset.o memmove.o strcmp.o strcpy.o strncmp.o strncpy.o strlen.o\
+	call_via.o _memcpy.o uread4.o uwrite4.o strcoll.o strerror.o strtok.o\
+	_streror.o memchr.o strcat.o strchr.o strcspn.o strncat.o strpbrk.o\
+	strrchr.o strspn.o strstr.o strxfrm.o asctime.o ctime.o difftime.o\
+	gmtime.o locltime.o mktime.o strftime.o _monlen.o rtdivtst.o rtsdiv10.o\
+	rtudiv10.o dspdiv32.o dspdiv32u.o dspdiv64.o rt_sdiv.o rt_udiv.o\
+	divtst.o sdiv10.o udiv10.o _sdiv.o _udiv.o rtrwchck.o proccheck.o\
+	setjmp.o rt_div0.o h_signal.o stkcont.o unwind.o kallocs.o lib_init.o\
+	_sysdie.o sysalloc.o argerr.o _main.o _main_arg.o _main_redirect.o\
+	handlers.o kernel.o startup.o
+		$(RM) armlib_si.16$(ENDIAN)
+		$(ARMLIB) -co armlib_si.16$(ENDIAN) -v lfile.PC
+
+sys_misc.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_misc_c -o sys_misc.o ..\..\angel\sysapp.c
+sys_open.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_open_c -o sys_open.o ..\..\angel\sysapp.c
+sys_write.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_write_c -o sys_write.o ..\..\angel\sysapp.c
+sys_error.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_error_c -o sys_error.o ..\..\angel\sysapp.c
+sys_seek.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_seek_c -o sys_seek.o ..\..\angel\sysapp.c
+sys_ensure.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_ensure_c -o sys_ensure.o ..\..\angel\sysapp.c
+sys_flen.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_flen_c -o sys_flen.o ..\..\angel\sysapp.c
+sys_tmpnam.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_tmpnam_c -o sys_tmpnam.o ..\..\angel\sysapp.c
+sys_wrch.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_wrch_c -o sys_wrch.o ..\..\angel\sysapp.c
+sys_system.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_system_c -o sys_system.o ..\..\angel\sysapp.c
+sys_remove.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_remove_c -o sys_remove.o ..\..\angel\sysapp.c
+sys_rename.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_rename_c -o sys_rename.o ..\..\angel\sysapp.c
+sys_command.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_command_c -o sys_command.o ..\..\angel\sysapp.c
+sys_clock.o:;	$(CC) $(CFLAGS) -DTARGET -Dsys_clock_c -o sys_clock.o ..\..\angel\sysapp.c
+suppapp.o:;	$(AS) $(AFLAGS)  -o suppapp.o ..\..\angel\suppapp.s
+oslow.o:;	$(AS) $(AFLAGS) -PD "linked_fpe SETL {FALSE}" -o oslow.o ..\..\angel\os.s
+oshigh.o:;	$(CC) $(CFLAGS)  -o oshigh.o ..\..\angel\os.c
+malloc.o:;	$(CC) $(CFLAGS) -Dalloc_c -o malloc.o ..\..\heapalloc.c
+free.o:;	$(CC) $(CFLAGS) -Dfree_c -o free.o ..\..\heapalloc.c
+realloc.o:;	$(CC) $(CFLAGS) -Drealloc_c -o realloc.o ..\..\heapalloc.c
+calloc.o:;	$(CC) $(CFLAGS) -Dcalloc_c -o calloc.o ..\..\heapalloc.c
+stats.o:;	$(CC) $(CFLAGS) -Dstats_c -o stats.o ..\..\heapalloc.c
+h1_alloc.o:;	$(CC) $(CFLAGS) -Dalloc_c -o h1_alloc.o ..\..\heap1.c
+h1_extend.o:;	$(CC) $(CFLAGS) -Dextend_c -o h1_extend.o ..\..\heap1.c
+h1_free.o:;	$(CC) $(CFLAGS) -Dfree_c -o h1_free.o ..\..\heap1.c
+h1_realloc.o:;	$(CC) $(CFLAGS) -Drealloc_c -o h1_realloc.o ..\..\heap1.c
+h1_stats.o:;	$(CC) $(CFLAGS) -Dstats_c -o h1_stats.o ..\..\heap1.c
+llneg.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_neg\"" -o llneg.o ..\..\longlong.s
+lladd.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_add\"" -o lladd.o ..\..\longlong.s
+llsub.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_sub\"" -o llsub.o ..\..\longlong.s
+llrsb.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_rsb\"" -o llrsb.o ..\..\longlong.s
+llmul.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_mul\"" -o llmul.o ..\..\longlong.s
+lladdls.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_addls\"" -o lladdls.o ..\..\longlong.s
+llsubls.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_subls\"" -o llsubls.o ..\..\longlong.s
+llrsbls.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_rsbls\"" -o llrsbls.o ..\..\longlong.s
+lladdlu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_addlu\"" -o lladdlu.o ..\..\longlong.s
+llsublu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_sublu\"" -o llsublu.o ..\..\longlong.s
+llrsblu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_rsblu\"" -o llrsblu.o ..\..\longlong.s
+llmullu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_mullu\"" -o llmullu.o ..\..\longlong.s
+llmulls.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_mulls\"" -o llmulls.o ..\..\longlong.s
+lladdss.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_addss\"" -o lladdss.o ..\..\longlong.s
+llsubss.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_subss\"" -o llsubss.o ..\..\longlong.s
+llrsbss.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_rsbss\"" -o llrsbss.o ..\..\longlong.s
+llmulss.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_mulss\"" -o llmulss.o ..\..\longlong.s
+lladduu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_adduu\"" -o lladduu.o ..\..\longlong.s
+llsubuu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_subuu\"" -o llsubuu.o ..\..\longlong.s
+llrsbuu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_rsbuu\"" -o llrsbuu.o ..\..\longlong.s
+llmuluu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_muluu\"" -o llmuluu.o ..\..\longlong.s
+llsdiv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_sdiv\"" -o llsdiv.o ..\..\longlong.s
+llsrdv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_srdv\"" -o llsrdv.o ..\..\longlong.s
+lludiv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_udiv\"" -o lludiv.o ..\..\longlong.s
+llurdv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_urdv\"" -o llurdv.o ..\..\longlong.s
+llnot.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_not\"" -o llnot.o ..\..\longlong.s
+lland.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_and\"" -o lland.o ..\..\longlong.s
+llor.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_or\"" -o llor.o ..\..\longlong.s
+lleor.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_eor\"" -o lleor.o ..\..\longlong.s
+llshl.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_shift_l\"" -o llshl.o ..\..\longlong.s
+llushr.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_ushift_r\"" -o llushr.o ..\..\longlong.s
+llsshr.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_sshift_r\"" -o llsshr.o ..\..\longlong.s
+llcmpeq.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_cmpeq\"" -o llcmpeq.o ..\..\longlong.s
+llcmpne.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_cmpne\"" -o llcmpne.o ..\..\longlong.s
+llucmpgt.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_ucmpgt\"" -o llucmpgt.o ..\..\longlong.s
+llucmpge.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_ucmpge\"" -o llucmpge.o ..\..\longlong.s
+llucmplt.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_ucmplt\"" -o llucmplt.o ..\..\longlong.s
+llucmple.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_ucmple\"" -o llucmple.o ..\..\longlong.s
+llscmpgt.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_scmpgt\"" -o llscmpgt.o ..\..\longlong.s
+llscmpge.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_scmpge\"" -o llscmpge.o ..\..\longlong.s
+llscmplt.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_scmplt\"" -o llscmplt.o ..\..\longlong.s
+llscmple.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_scmple\"" -o llscmple.o ..\..\longlong.s
+llfroml.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_from_l\"" -o llfroml.o ..\..\longlong.s
+llfromu.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_from_u\"" -o llfromu.o ..\..\longlong.s
+lltol.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_ll_to_l\"" -o lltol.o ..\..\longlong.s
+ffltll.o:;	$(AS) $(AFLAGS)  -PD "ffltll_s SETL {TRUE}"  -o ffltll.o ..\..\fplib\format_f.s
+dfltll.o:;	$(AS) $(AFLAGS)  -PD "dfltll_s SETL {TRUE}"  -o dfltll.o ..\..\fplib\format_d.s
+llsfromd.o:;	$(AS) $(AFLAGS)  -PD "ll_sfrom_d_s SETL {TRUE}"  -o llsfromd.o ..\..\fplib\format_d.s
+llufromd.o:;	$(AS) $(AFLAGS)  -PD "ll_ufrom_d_s SETL {TRUE}"  -o llufromd.o ..\..\fplib\format_d.s
+llsfromf.o:;	$(AS) $(AFLAGS)  -PD "ll_sfrom_f_s SETL {TRUE}"  -o llsfromf.o ..\..\fplib\format_f.s
+llufromf.o:;	$(AS) $(AFLAGS)  -PD "ll_ufrom_f_s SETL {TRUE}"  -o llufromf.o ..\..\fplib\format_f.s
+dflt.o:;	$(AS) $(AFLAGS) -PD "dflt_s SETL {TRUE}" -o dflt.o ..\..\fplib\format_d.s
+fflt.o:;	$(AS) $(AFLAGS) -PD "fflt_s SETL {TRUE}" -o fflt.o ..\..\fplib\format_f.s
+ffix.o:;	$(AS) $(AFLAGS) -PD "ffix_s SETL {TRUE}" -o ffix.o ..\..\fplib\format_f.s
+ffixu.o:;	$(AS) $(AFLAGS) -PD "ffixu_s SETL {TRUE}" -o ffixu.o ..\..\fplib\format_f.s
+dfix.o:;	$(AS) $(AFLAGS) -PD "dfix_s SETL {TRUE}" -o dfix.o ..\..\fplib\format_d.s
+dfixu.o:;	$(AS) $(AFLAGS) -PD "dfixu_s SETL {TRUE}" -o dfixu.o ..\..\fplib\format_d.s
+except.o:;	$(AS) $(AFLAGS) -PD "except_s SETL {TRUE}" -o except.o ..\..\fplib\except.s
+fcheck.o:;	$(AS) $(AFLAGS) -PD "fcheck_s SETL {TRUE}" -o fcheck.o ..\..\fplib\except.s
+liberror.o:;	$(AS) $(AFLAGS) -PD "liberror_s SETL {TRUE}" -o liberror.o ..\..\fplib\except.s
+fpdata.o:;	$(AS) $(AFLAGS) -PD "fpdata_s SETL {TRUE}" -o fpdata.o ..\..\fplib\except.s
+status.o:;	$(AS) $(AFLAGS) -PD "status_s SETL {TRUE}" -o status.o ..\..\fplib\except.s
+dadd.o:;	$(AS) $(AFLAGS) -PD "add_s SETL {TRUE}" -o dadd.o ..\..\fplib\veneer_d.s
+dsub.o:;	$(AS) $(AFLAGS) -PD "sub_s SETL {TRUE}" -o dsub.o ..\..\fplib\veneer_d.s
+drsb.o:;	$(AS) $(AFLAGS) -PD "rsb_s SETL {TRUE}" -o drsb.o ..\..\fplib\veneer_d.s
+dmul.o:;	$(AS) $(AFLAGS) -PD "mul_s SETL {TRUE}" -o dmul.o ..\..\fplib\veneer_d.s
+ddiv.o:;	$(AS) $(AFLAGS) -PD "div_s SETL {TRUE}" -o ddiv.o ..\..\fplib\veneer_d.s
+drdv.o:;	$(AS) $(AFLAGS) -PD "rdv_s SETL {TRUE}" -o drdv.o ..\..\fplib\veneer_d.s
+dsqrt.o:;	$(AS) $(AFLAGS) -PD "sqrt_s SETL {TRUE}" -o dsqrt.o ..\..\fplib\veneer_d.s
+eadd.o:;	$(AS) $(AFLAGS) -PD "add_s SETL {TRUE}" -o eadd.o ..\..\fplib\veneer_e.s
+esub.o:;	$(AS) $(AFLAGS) -PD "sub_s SETL {TRUE}" -o esub.o ..\..\fplib\veneer_e.s
+emul.o:;	$(AS) $(AFLAGS) -PD "mul_s SETL {TRUE}" -o emul.o ..\..\fplib\veneer_e.s
+esquare.o:;	$(AS) $(AFLAGS) -PD "square_s SETL {TRUE}" -o esquare.o ..\..\fplib\veneer_e.s
+ediv.o:;	$(AS) $(AFLAGS) -PD "div_s SETL {TRUE}" -o ediv.o ..\..\fplib\veneer_e.s
+erdv.o:;	$(AS) $(AFLAGS) -PD "rdv_s SETL {TRUE}" -o erdv.o ..\..\fplib\veneer_e.s
+esqrt.o:;	$(AS) $(AFLAGS) -PD "sqrt_s SETL {TRUE}" -o esqrt.o ..\..\fplib\veneer_e.s
+efix.o:;	$(AS) $(AFLAGS) -PD "fix_s SETL {TRUE}" -o efix.o ..\..\fplib\veneer_e.s
+efixu.o:;	$(AS) $(AFLAGS) -PD "fixu_s SETL {TRUE}" -o efixu.o ..\..\fplib\veneer_e.s
+fadd.o:;	$(AS) $(AFLAGS) -PD "add_s SETL {TRUE}" -o fadd.o ..\..\fplib\veneer_f.s
+fmul.o:;	$(AS) $(AFLAGS) -PD "mul_s SETL {TRUE}" -o fmul.o ..\..\fplib\veneer_f.s
+fdiv.o:;	$(AS) $(AFLAGS) -PD "div_s SETL {TRUE}" -o fdiv.o ..\..\fplib\veneer_f.s
+fnorm2.o:;	$(AS) $(AFLAGS) -PD "fnorm2_s SETL {TRUE}" -o fnorm2.o ..\..\fplib\veneer_f.s
+mul.o:;		$(AS) $(AFLAGS) -PD "mul_s SETL {TRUE}" -o mul.o ..\..\fplib\veneer.s
+addsub.o:;	$(AS) $(AFLAGS) -PD "addsub_s SETL {TRUE}" -o addsub.o ..\..\fplib\veneer.s
+div.o:;		$(AS) $(AFLAGS) -PD "div_s SETL {TRUE}" -o div.o ..\..\fplib\veneer.s
+sqrt.o:;	$(AS) $(AFLAGS) -PD "sqrt_s SETL {TRUE}" -o sqrt.o ..\..\fplib\veneer.s
+fix.o:;		$(AS) $(AFLAGS) -PD "fix_s SETL {TRUE}" -o fix.o ..\..\fplib\veneer.s
+fixu.o:;	$(AS) $(AFLAGS) -PD "fixu_s SETL {TRUE}" -o fixu.o ..\..\fplib\veneer.s
+normal.o:;	$(AS) $(AFLAGS)  -o normal.o ..\..\fplib\normal.s
+basic.o:;	$(AS) $(AFLAGS)  -o basic.o ..\..\fplib\basic.s
+deqf.o:;	$(AS) $(AFLAGS) -PD "eqf_s SETL {TRUE}" -o deqf.o ..\..\fplib\basic_d.s
+dleqf.o:;	$(AS) $(AFLAGS) -PD "leqf_s SETL {TRUE}" -o dleqf.o ..\..\fplib\basic_d.s
+dgeqf.o:;	$(AS) $(AFLAGS) -PD "geqf_s SETL {TRUE}" -o dgeqf.o ..\..\fplib\basic_d.s
+deq.o:;		$(AS) $(AFLAGS) -PD "eq_s SETL {TRUE}" -o deq.o ..\..\fplib\basic_d.s
+dneq.o:;	$(AS) $(AFLAGS) -PD "neq_s SETL {TRUE}" -o dneq.o ..\..\fplib\basic_d.s
+dls.o:;		$(AS) $(AFLAGS) -PD "ls_s SETL {TRUE}" -o dls.o ..\..\fplib\basic_d.s
+dleq.o:;	$(AS) $(AFLAGS) -PD "leq_s SETL {TRUE}" -o dleq.o ..\..\fplib\basic_d.s
+dgr.o:;		$(AS) $(AFLAGS) -PD "gr_s SETL {TRUE}" -o dgr.o ..\..\fplib\basic_d.s
+dgeq.o:;	$(AS) $(AFLAGS) -PD "geq_s SETL {TRUE}" -o dgeq.o ..\..\fplib\basic_d.s
+dcompare.o:;	$(AS) $(AFLAGS) -PD "compare_s SETL {TRUE}" -o dcompare.o ..\..\fplib\basic_d.s
+feqf.o:;	$(AS) $(AFLAGS) -PD "eqf_s SETL {TRUE}" -o feqf.o ..\..\fplib\basic_f.s
+fleqf.o:;	$(AS) $(AFLAGS) -PD "leqf_s SETL {TRUE}" -o fleqf.o ..\..\fplib\basic_f.s
+fgeqf.o:;	$(AS) $(AFLAGS) -PD "geqf_s SETL {TRUE}" -o fgeqf.o ..\..\fplib\basic_f.s
+feq.o:;		$(AS) $(AFLAGS) -PD "eq_s SETL {TRUE}" -o feq.o ..\..\fplib\basic_f.s
+fneq.o:;	$(AS) $(AFLAGS) -PD "neq_s SETL {TRUE}" -o fneq.o ..\..\fplib\basic_f.s
+fls.o:;		$(AS) $(AFLAGS) -PD "ls_s SETL {TRUE}" -o fls.o ..\..\fplib\basic_f.s
+fleq.o:;	$(AS) $(AFLAGS) -PD "leq_s SETL {TRUE}" -o fleq.o ..\..\fplib\basic_f.s
+fgr.o:;		$(AS) $(AFLAGS) -PD "gr_s SETL {TRUE}" -o fgr.o ..\..\fplib\basic_f.s
+fgeq.o:;	$(AS) $(AFLAGS) -PD "geq_s SETL {TRUE}" -o fgeq.o ..\..\fplib\basic_f.s
+fcompare.o:;	$(AS) $(AFLAGS) -PD "compare_s SETL {TRUE}" -o fcompare.o ..\..\fplib\basic_f.s
+eeq.o:;		$(AS) $(AFLAGS) -PD "eq_s SETL {TRUE}" -o eeq.o ..\..\fplib\basic_e.s
+eneq.o:;	$(AS) $(AFLAGS) -PD "neq_s SETL {TRUE}" -o eneq.o ..\..\fplib\basic_e.s
+els.o:;		$(AS) $(AFLAGS) -PD "ls_s SETL {TRUE}" -o els.o ..\..\fplib\basic_e.s
+eleq.o:;	$(AS) $(AFLAGS) -PD "leq_s SETL {TRUE}" -o eleq.o ..\..\fplib\basic_e.s
+egr.o:;		$(AS) $(AFLAGS) -PD "gr_s SETL {TRUE}" -o egr.o ..\..\fplib\basic_e.s
+egeq.o:;	$(AS) $(AFLAGS) -PD "geq_s SETL {TRUE}" -o egeq.o ..\..\fplib\basic_e.s
+ecompare.o:;	$(AS) $(AFLAGS) -PD "compare_s SETL {TRUE}" -o ecompare.o ..\..\fplib\veneer.s
+d2e.o:;		$(AS) $(AFLAGS) -PD "d2e_s SETL {TRUE}" -o d2e.o ..\..\fplib\format_d.s
+e2d.o:;		$(AS) $(AFLAGS) -PD "e2d_s SETL {TRUE}" -o e2d.o ..\..\fplib\format_d.s
+frexp.o:;	$(AS) $(AFLAGS) -PD "frexp_s SETL {TRUE}" -o frexp.o ..\..\fplib\format_d.s
+ldexp.o:;	$(AS) $(AFLAGS) -PD "ldexp_s SETL {TRUE}" -o ldexp.o ..\..\fplib\format_d.s
+floor.o:;	$(AS) $(AFLAGS) -PD "floor_s SETL {TRUE}" -o floor.o ..\..\fplib\format_d.s
+modf.o:;	$(AS) $(AFLAGS) -PD "modf_s SETL {TRUE}" -o modf.o ..\..\fplib\format_d.s
+fmod.o:;	$(CC) $(CFLAGS) -Dfmod_c -o fmod.o ..\..\fplib\fmod.c
+nans.o:;	$(AS) $(AFLAGS)  -o nans.o ..\..\fplib\nans.s
+d2f.o:;		$(AS) $(AFLAGS) -PD "d2f_s SETL {TRUE}" -o d2f.o ..\..\fplib\format.s
+f2d.o:;		$(AS) $(AFLAGS) -PD "f2d_s SETL {TRUE}" -o f2d.o ..\..\fplib\format.s
+e2f.o:;		$(AS) $(AFLAGS) -PD "e2f_s SETL {TRUE}" -o e2f.o ..\..\fplib\format_f.s
+norm_op1.o:;	$(AS) $(AFLAGS) -PD "norm_op1_s SETL {TRUE}" -o norm_op1.o ..\..\fplib\format_e.s
+norm_op2.o:;	$(AS) $(AFLAGS) -PD "norm_op2_s SETL {TRUE}" -o norm_op2.o ..\..\fplib\format_e.s
+eflt.o:;	$(AS) $(AFLAGS) -PD "eflt_s SETL {TRUE}" -o eflt.o ..\..\fplib\format_e.s
+efltu.o:;	$(AS) $(AFLAGS) -PD "efltu_s SETL {TRUE}" -o efltu.o ..\..\fplib\format_e.s
+e2e.o:;		$(AS) $(AFLAGS) -PD "e2e_s SETL {TRUE}" -o e2e.o ..\..\fplib\format_e.s
+range.o:;	$(AS) $(AFLAGS) -PD "range_s SETL {TRUE}" -o range.o ..\..\fplib\thumb.s
+poly.o:;	$(AS) $(AFLAGS) -PD "poly_s SETL {TRUE}" -o poly.o ..\..\fplib\thumb.s
+poly0.o:;	$(AS) $(AFLAGS) -PD "poly0_s SETL {TRUE}" -o poly0.o ..\..\fplib\thumb.s
+poly1.o:;	$(AS) $(AFLAGS) -PD "poly1_s SETL {TRUE}" -o poly1.o ..\..\fplib\thumb.s
+exp.o:;		$(CC) $(CFLAGS) -Dexp_c -o exp.o ..\..\fplib\exp.c
+_exp.o:;	$(CC) $(CFLAGS) -D_exp_c -o _exp.o ..\..\fplib\exp.c
+log.o:;		$(CC) $(CFLAGS) -Dlog_c -o log.o ..\..\fplib\log.c
+log10.o:;	$(CC) $(CFLAGS) -Dlog10_c -o log10.o ..\..\fplib\log.c
+_log.o:;	$(CC) $(CFLAGS) -D_log_c -o _log.o ..\..\fplib\log.c
+sin.o:;		$(CC) $(CFLAGS) -Dsin_c -o sin.o ..\..\fplib\sincos.c
+cos.o:;		$(CC) $(CFLAGS) -Dcos_c -o cos.o ..\..\fplib\sincos.c
+_sincos.o:;	$(CC) $(CFLAGS) -D_sincos_c -o _sincos.o ..\..\fplib\sincos.c
+tan.o:;		$(CC) $(CFLAGS)  -o tan.o ..\..\fplib\tan.c
+atan.o:;	$(CC) $(CFLAGS) -Datan_c -o atan.o ..\..\fplib\atan.c
+atan2.o:;	$(CC) $(CFLAGS) -Datan2_c -o atan2.o ..\..\fplib\atan.c
+_atnpol.o:;	$(CC) $(CFLAGS) -D_atnpol_c -o _atnpol.o ..\..\fplib\atan.c
+asin.o:;	$(CC) $(CFLAGS) -Dasin_c -o asin.o ..\..\fplib\asinacos.c
+acos.o:;	$(CC) $(CFLAGS) -Dacos_c -o acos.o ..\..\fplib\asinacos.c
+_asnacs.o:;	$(CC) $(CFLAGS) -D_asnacs_c -o _asnacs.o ..\..\fplib\asinacos.c
+sinh.o:;	$(CC) $(CFLAGS)  -o sinh.o ..\..\fplib\sinh.c
+cosh.o:;	$(CC) $(CFLAGS)  -o cosh.o ..\..\fplib\cosh.c
+tanh.o:;	$(CC) $(CFLAGS)  -o tanh.o ..\..\fplib\tanh.c
+pow.o:;		$(CC) $(CFLAGS)  -o pow.o ..\..\fplib\pow.c
+__fp_con.o:;	$(CC) $(CFLAGS)  -o __fp_con.o ..\..\fplib\constant.c
+mabs.o:;	$(CC) $(CFLAGS) -Dabs_c -o mabs.o ..\..\math.c
+mdiv.o:;	$(CC) $(CFLAGS) -Ddiv_c -o mdiv.o ..\..\math.c
+mlabs.o:;	$(CC) $(CFLAGS) -Dlabs_c -o mlabs.o ..\..\math.c
+mldiv.o:;	$(CC) $(CFLAGS) -Dldiv_c -o mldiv.o ..\..\math.c
+ctype.o:;	$(CC) $(CFLAGS) -Dctype_c -o ctype.o ..\..\ctype.c
+isalnum.o:;	$(CC) $(CFLAGS) -Disalnum_c -o isalnum.o ..\..\ctype.c
+isalpha.o:;	$(CC) $(CFLAGS) -Disalpha_c -o isalpha.o ..\..\ctype.c
+iscntrl.o:;	$(CC) $(CFLAGS) -Discntrl_c -o iscntrl.o ..\..\ctype.c
+isdigit.o:;	$(CC) $(CFLAGS) -Disdigit_c -o isdigit.o ..\..\ctype.c
+isgraph.o:;	$(CC) $(CFLAGS) -Disgraph_c -o isgraph.o ..\..\ctype.c
+islower.o:;	$(CC) $(CFLAGS) -Dislower_c -o islower.o ..\..\ctype.c
+isprint.o:;	$(CC) $(CFLAGS) -Disprint_c -o isprint.o ..\..\ctype.c
+ispunct.o:;	$(CC) $(CFLAGS) -Dispunct_c -o ispunct.o ..\..\ctype.c
+isspace.o:;	$(CC) $(CFLAGS) -Disspace_c -o isspace.o ..\..\ctype.c
+isupper.o:;	$(CC) $(CFLAGS) -Disupper_c -o isupper.o ..\..\ctype.c
+isxdigit.o:;	$(CC) $(CFLAGS) -Disxdigit_c -o isxdigit.o ..\..\ctype.c
+tolower.o:;	$(CC) $(CFLAGS) -Dtolower_c -o tolower.o ..\..\ctype.c
+toupper.o:;	$(CC) $(CFLAGS) -Dtoupper_c -o toupper.o ..\..\ctype.c
+_sputc.o:;	$(CC) $(CFLAGS) -D_sputc_c -o _sputc.o ..\..\printf.c
+sprintf.o:;	$(CC) $(CFLAGS) -Dsprintf_c -o sprintf.o ..\..\printf.c
+vsprintf.o:;	$(CC) $(CFLAGS) -Dvsprintf_c -o vsprintf.o ..\..\printf.c
+_sprintf.o:;	$(CC) $(CFLAGS) -D_sprintf_c -o _sprintf.o ..\..\printf.c
+__vfpntf.o:;	$(CC) $(CFLAGS) -D__vfprintf_c -o __vfpntf.o ..\..\printf.c
+nofpdisp.o:;	$(CC) $(CFLAGS) -D_nofp_disp_c -o nofpdisp.o ..\..\printf.c
+_vfprntf.o:;	$(CC) $(CFLAGS) -D_vfprintf_c -o _vfprntf.o ..\..\printf.c
+_vsprntf.o:;	$(CC) $(CFLAGS) -D_vsprintf_c -o _vsprntf.o ..\..\printf.c
+_chval.o:;	$(CC) $(CFLAGS) -D_chval_c -o _chval.o ..\..\scanf.c
+_fp_disp.o:;	$(CC) $(CFLAGS) -D_fp_disp_c -o _fp_disp.o ..\..\printf.c
+_scanf.o:;	$(CC) $(CFLAGS) -D_scanf_c -o _scanf.o ..\..\scanf.c
+sgetc.o:;	$(CC) $(CFLAGS) -D_sgetc_c -o sgetc.o ..\..\scanf.c
+_strtoul.o:;	$(CC) $(CFLAGS) -D_strtoul_c -o _strtoul.o ..\..\scanf.c
+strtod.o:;	$(CC) $(CFLAGS) -Dstrtod_c -o strtod.o ..\..\scanf.c
+strtol.o:;	$(CC) $(CFLAGS) -Dstrtol_c -o strtol.o ..\..\scanf.c
+strtoul.o:;	$(CC) $(CFLAGS) -Dstrtoul_c -o strtoul.o ..\..\scanf.c
+sscanf.o:;	$(CC) $(CFLAGS) -Dsscanf_c -o sscanf.o ..\..\scanf.c
+atof.o:;	$(CC) $(CFLAGS) -Datof_c -o atof.o ..\..\scanf.c
+atoi.o:;	$(CC) $(CFLAGS) -Datoi_c -o atoi.o ..\..\scanf.c
+atol.o:;	$(CC) $(CFLAGS) -Datol_c -o atol.o ..\..\scanf.c
+_set8859.o:;	$(CC) $(CFLAGS) -D_set8859_c -o _set8859.o ..\..\ctype.c
+xmath.o:;	$(CC) $(CFLAGS)  -o xmath.o ..\..\xmath.c
+image.o:;	$(AS) $(AFLAGS)  -o image.o ..\..\image.s
+fprintf.o:;	$(CC) $(CFLAGS) -Dfprintf_c -o fprintf.o ..\..\printf.c
+printf.o:;	$(CC) $(CFLAGS) -Dprintf_c -o printf.o ..\..\printf.c
+vfprintf.o:;	$(CC) $(CFLAGS) -Dvfprintf_c -o vfprintf.o ..\..\printf.c
+vprintf.o:;	$(CC) $(CFLAGS) -Dvprintf_c -o vprintf.o ..\..\printf.c
+_printf.o:;	$(CC) $(CFLAGS) -D_printf_c -o _printf.o ..\..\printf.c
+_fprintf.o:;	$(CC) $(CFLAGS) -D_fprintf_c -o _fprintf.o ..\..\printf.c
+scanf.o:;	$(CC) $(CFLAGS) -Dscanf_c -o scanf.o ..\..\scanf.c
+fscanf.o:;	$(CC) $(CFLAGS) -Dfscanf_c -o fscanf.o ..\..\scanf.c
+backspce.o:;	$(CC) $(CFLAGS) -Dbackspace_c -o backspce.o ..\..\stdio.c
+clearerr.o:;	$(CC) $(CFLAGS) -Dclearerr_c -o clearerr.o ..\..\stdio.c
+feof.o:;	$(CC) $(CFLAGS) -Dfeof_c -o feof.o ..\..\stdio.c
+ferror.o:;	$(CC) $(CFLAGS) -Dferror_c -o ferror.o ..\..\stdio.c
+fflush.o:;	$(CC) $(CFLAGS) -Dfflush_c -o fflush.o ..\..\stdio.c
+fgetc.o:;	$(CC) $(CFLAGS) -Dfgetc_c -o fgetc.o ..\..\stdio.c
+fgetpos.o:;	$(CC) $(CFLAGS) -Dfgetpos_c -o fgetpos.o ..\..\stdio.c
+fgets.o:;	$(CC) $(CFLAGS) -Dfgets_c -o fgets.o ..\..\stdio.c
+fisatty.o:;	$(CC) $(CFLAGS) -Dfisatty_c -o fisatty.o ..\..\stdio.c
+filbuf.o:;	$(CC) $(CFLAGS) -Dfilbuf_c -o filbuf.o ..\..\stdio.c
+flsbuf.o:;	$(CC) $(CFLAGS) -Dflsbuf_c -o flsbuf.o ..\..\stdio.c
+fputc.o:;	$(CC) $(CFLAGS) -Dfputc_c -o fputc.o ..\..\stdio.c
+fputs.o:;	$(CC) $(CFLAGS) -Dfputs_c -o fputs.o ..\..\stdio.c
+fread.o:;	$(CC) $(CFLAGS) -Dfread_c -o fread.o ..\..\stdio.c
+fseek.o:;	$(CC) $(CFLAGS) -Dfseek_c -o fseek.o ..\..\stdio.c
+fsetpos.o:;	$(CC) $(CFLAGS) -Dfsetpos_c -o fsetpos.o ..\..\stdio.c
+ftell.o:;	$(CC) $(CFLAGS) -Dftell_c -o ftell.o ..\..\stdio.c
+fwrite.o:;	$(CC) $(CFLAGS) -Dfwrite_c -o fwrite.o ..\..\stdio.c
+getc.o:;	$(CC) $(CFLAGS) -Dgetc_c -o getc.o ..\..\stdio.c
+getchar.o:;	$(CC) $(CFLAGS) -Dgetchar_c -o getchar.o ..\..\stdio.c
+gets.o:;	$(CC) $(CFLAGS) -Dgets_c -o gets.o ..\..\stdio.c
+osf.o:;		$(CC) $(CFLAGS) -Dosf_c -o osf.o ..\..\stdio.c
+perror.o:;	$(CC) $(CFLAGS) -Dperror_c -o perror.o ..\..\stdio.c
+putc.o:;	$(CC) $(CFLAGS) -Dputc_c -o putc.o ..\..\stdio.c
+putchar.o:;	$(CC) $(CFLAGS) -Dputchar_c -o putchar.o ..\..\stdio.c
+puts.o:;	$(CC) $(CFLAGS) -Dputs_c -o puts.o ..\..\stdio.c
+rewind.o:;	$(CC) $(CFLAGS) -Drewind_c -o rewind.o ..\..\stdio.c
+setbuf.o:;	$(CC) $(CFLAGS) -Dsetbuf_c -o setbuf.o ..\..\stdio.c
+setvbuf.o:;	$(CC) $(CFLAGS) -Dsetvbuf_c -o setvbuf.o ..\..\stdio.c
+stdio.o:;	$(CC) $(CFLAGS) -Dstdio_c -o stdio.o ..\..\stdio.c
+tmpnam.o:;	$(CC) $(CFLAGS) -Dtmpnam_c -o tmpnam.o ..\..\stdio.c
+ungetc.o:;	$(CC) $(CFLAGS) -Dungetc_c -o ungetc.o ..\..\stdio.c
+_sys_msg.o:;	$(CC) $(CFLAGS) -D_sys_msg_c -o _sys_msg.o ..\..\stdio.c
+__dup.o:;	$(CC) $(CFLAGS) -D__dup_c -o __dup.o ..\..\stdio.c
+rand.o:;	$(CC) $(CFLAGS) -Drand_c -o rand.o ..\..\stdlib.c
+ansirand.o:;	$(CC) $(CFLAGS) -DANSI_rand_c -o ansirand.o ..\..\stdlib.c
+atexit.o:;	$(CC) $(CFLAGS) -Datexit_c -o atexit.o ..\..\stdlib.c
+exit.o:;	$(CC) $(CFLAGS) -Dexit_c -o exit.o ..\..\stdlib.c
+abort.o:;	$(CC) $(CFLAGS) -Dabort_c -o abort.o ..\..\stdlib.c
+_version.o:;	$(CC) $(CFLAGS) -D_version_c -o _version.o ..\..\stdlib.c
+signal.o:;	$(CC) $(CFLAGS)  -o signal.o ..\..\signal.c
+assert.o:;	$(CC) $(CFLAGS)  -o assert.o ..\..\assert.c
+locale.o:;	$(CC) $(CFLAGS) -Dlocale_c -o locale.o ..\..\locale.c
+localecv.o:;	$(CC) $(CFLAGS) -Dlocaleconv_c -o localecv.o ..\..\locale.c
+_lc.o:;		$(CC) $(CFLAGS) -D_lc_c -o _lc.o ..\..\locale.c
+mblen.o:;	$(CC) $(CFLAGS) -Dmblen_c -o mblen.o ..\..\locale.c
+mbtowc.o:;	$(CC) $(CFLAGS) -Dmbtowc_c -o mbtowc.o ..\..\locale.c
+wctomb.o:;	$(CC) $(CFLAGS) -Dwctomb_c -o wctomb.o ..\..\locale.c
+mbstowcs.o:;	$(CC) $(CFLAGS) -Dmbstowcs_c -o mbstowcs.o ..\..\locale.c
+wcstombs.o:;	$(CC) $(CFLAGS) -Dwcstombs_c -o wcstombs.o ..\..\locale.c
+qsort.o:;	$(CC) $(CFLAGS) -Dqsort_c -o qsort.o ..\..\stdlib.c
+bsearch.o:;	$(CC) $(CFLAGS) -Dbsearch_c -o bsearch.o ..\..\stdlib.c
+memcmp.o:;	$(AS) $(AFLAGS)  -o memcmp.o ..\..\thumb\memcmp.s
+memset.o:;	$(AS) $(AFLAGS)  -o memset.o ..\..\thumb\memset.s
+memmove.o:;	$(AS) $(AFLAGS)  -o memmove.o ..\..\thumb\memmove.s
+strcmp.o:;	$(CC) $(CFLAGS) -Dstrcmp_c -o strcmp.o ..\..\string.c
+strcpy.o:;	$(AS) $(AFLAGS)  -o strcpy.o ..\..\thumb\strcpy.s
+strncmp.o:;	$(AS) $(AFLAGS)  -o strncmp.o ..\..\thumb\strncmp.s
+strncpy.o:;	$(AS) $(AFLAGS)  -o strncpy.o ..\..\thumb\strncpy.s
+strlen.o:;	$(AS) $(AFLAGS)  -o strlen.o ..\..\thumb\strlen.s
+call_via.o:;	$(AS) $(AFLAGS)  -o call_via.o ..\..\thumb\call_via.s
+_memcpy.o:;	$(AS) $(AFLAGS) -PD "make SETS \"_memcpy\"" -o _memcpy.o ..\..\memcpset.s
+uread4.o:;	$(AS) $(AFLAGS) -PD "make SETS \"uread4\"" -o uread4.o ..\..\memcpset.s
+uwrite4.o:;	$(AS) $(AFLAGS) -PD "make SETS \"uwrite4\"" -o uwrite4.o ..\..\memcpset.s
+strcoll.o:;	$(CC) $(CFLAGS) -Dstrcoll_c -o strcoll.o ..\..\string.c
+strerror.o:;	$(CC) $(CFLAGS) -Dstrerror_c -o strerror.o ..\..\string.c
+strtok.o:;	$(CC) $(CFLAGS) -Dstrtok_c -o strtok.o ..\..\string.c
+_streror.o:;	$(CC) $(CFLAGS) -D_strerror_c -o _streror.o ..\..\string.c
+memchr.o:;	$(CC) $(CFLAGS) -Dmemchr_c -o memchr.o ..\..\string.c
+strcat.o:;	$(CC) $(CFLAGS) -Dstrcat_c -o strcat.o ..\..\string.c
+strchr.o:;	$(CC) $(CFLAGS) -Dstrchr_c -o strchr.o ..\..\string.c
+strcspn.o:;	$(CC) $(CFLAGS) -Dstrcspn_c -o strcspn.o ..\..\string.c
+strncat.o:;	$(CC) $(CFLAGS) -Dstrncat_c -o strncat.o ..\..\string.c
+strpbrk.o:;	$(CC) $(CFLAGS) -Dstrpbrk_c -o strpbrk.o ..\..\string.c
+strrchr.o:;	$(CC) $(CFLAGS) -Dstrrchr_c -o strrchr.o ..\..\string.c
+strspn.o:;	$(CC) $(CFLAGS) -Dstrspn_c -o strspn.o ..\..\string.c
+strstr.o:;	$(CC) $(CFLAGS) -Dstrstr_c -o strstr.o ..\..\string.c
+strxfrm.o:;	$(CC) $(CFLAGS) -Dstrxfrm_c -o strxfrm.o ..\..\string.c
+asctime.o:;	$(CC) $(CFLAGS) -Dasctime_c -o asctime.o ..\..\time.c
+ctime.o:;	$(CC) $(CFLAGS) -Dctime_c -o ctime.o ..\..\time.c
+difftime.o:;	$(CC) $(CFLAGS) -Ddifftime_c -o difftime.o ..\..\time.c
+gmtime.o:;	$(CC) $(CFLAGS) -Dgmtime_c -o gmtime.o ..\..\time.c
+locltime.o:;	$(CC) $(CFLAGS) -Dlocaltime_c -o locltime.o ..\..\time.c
+mktime.o:;	$(CC) $(CFLAGS) -Dmktime_c -o mktime.o ..\..\time.c
+strftime.o:;	$(CC) $(CFLAGS) -Dstrftime_c -o strftime.o ..\..\time.c
+_monlen.o:;	$(CC) $(CFLAGS) -D_monlen_c -o _monlen.o ..\..\time.c
+rtdivtst.o:;	$(AS) $(AFLAGS) -PD "make SETS \"divtest\"" -o rtdivtst.o ..\..\unhosted.s
+rtsdiv10.o:;	$(AS) $(AFLAGS) -PD "make SETS \"sdiv10\"" -o rtsdiv10.o ..\..\unhosted.s
+rtudiv10.o:;	$(AS) $(AFLAGS) -PD "make SETS \"udiv10\"" -o rtudiv10.o ..\..\unhosted.s
+dspdiv32.o:;	$(AS) $(AFLAGS) -PD "make SETS \"dspdiv32\"" -o dspdiv32.o ..\..\unhosted.s
+dspdiv32u.o:;	$(AS) $(AFLAGS) -PD "make SETS \"dspdiv32u\"" -o dspdiv32u.o ..\..\unhosted.s
+dspdiv64.o:;	$(AS) $(AFLAGS) -PD "make SETS \"dspdiv64\"" -o dspdiv64.o ..\..\unhosted.s
+rt_sdiv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"sdiv_unrolled8\"" -o rt_sdiv.o ..\..\unhosted.s
+rt_udiv.o:;	$(AS) $(AFLAGS) -PD "make SETS \"udiv_unrolled8\"" -o rt_udiv.o ..\..\unhosted.s
+divtst.o:;	$(AS) $(AFLAGS) -32 -PD "make SETS \"divtest\"" -o divtst.o ..\..\unhosted.s
+sdiv10.o:;	$(AS) $(AFLAGS) -32 -PD "make SETS \"sdiv10\"" -o sdiv10.o ..\..\unhosted.s
+udiv10.o:;	$(AS) $(AFLAGS) -32 -PD "make SETS \"udiv10\"" -o udiv10.o ..\..\unhosted.s
+_sdiv.o:;	$(AS) $(AFLAGS) -32 -PD "make SETS \"sdiv_rolled\"" -o _sdiv.o ..\..\unhosted.s
+_udiv.o:;	$(AS) $(AFLAGS) -32 -PD "make SETS \"udiv_rolled\"" -o _udiv.o ..\..\unhosted.s
+rtrwchck.o:;	$(AS) $(AFLAGS) -PD "make SETS \"rwcheck\"" -o rtrwchck.o ..\..\unhosted.s
+proccheck.o:;	$(AS) $(AFLAGS) -PD "make SETS \"proccheck\"" -o proccheck.o ..\..\unhosted.s
+setjmp.o:;	$(AS) $(AFLAGS)  -o setjmp.o ..\..\setjmp.s
+rt_div0.o:;	$(AS) $(AFLAGS) -PD "make SETS \"div0\"" -o rt_div0.o ..\..\unhosted.s
+h_signal.o:;	$(AS) $(AFLAGS)  -o h_signal.o ..\..\h_signal.s
+stkcont.o:;	$(AS) $(AFLAGS)  -o stkcont.o ..\..\stkcont.s
+unwind.o:;	$(AS) $(AFLAGS)  -o unwind.o ..\..\unwind.s
+kallocs.o:;	$(AS) $(AFLAGS)  -o kallocs.o ..\..\kallocs.s
+lib_init.o:;	$(CC) $(CFLAGS) -Dlib_init_c -o lib_init.o ..\..\armsys.c
+_sysdie.o:;	$(CC) $(CFLAGS) -D_sysdie_c -o _sysdie.o ..\..\armsys.c
+sysalloc.o:;	$(CC) $(CFLAGS) -D_sys_alloc_c -o sysalloc.o ..\..\armsys.c
+argerr.o:;	$(CC) $(CFLAGS) -Dargerr_c -o argerr.o ..\..\armsys.c
+_main.o:;	$(CC) $(CFLAGS) -D_main_c -o _main.o ..\..\armsys.c
+_main_arg.o:;	$(CC) $(CFLAGS) -D_main_arg_c -DSTDFILE_REDIRECTION -o _main_arg.o ..\..\armsys.c
+_main_redirect.o:;	$(CC) $(CFLAGS) -D_main_redirect_c -DSTDFILE_REDIRECTION -o _main_redirect.o ..\..\armsys.c
+handlers.o:;	$(AS) $(AFLAGS) -PD "backtrace_enabled SETL {FALSE}" -o handlers.o ..\..\handlers.s
+kernel.o:;	$(AS) $(AFLAGS) -PD "backtrace_enabled SETL {FALSE}" -o kernel.o ..\..\angel\kernel.s
+startup.o:;	$(AS) $(AFLAGS)  -o startup.o ..\..\angel\startup.s
+
+depend:	d_000 d_001 d_002 d_003 d_004 d_005 d_006 d_007 d_008 d_009 d_00a\
+	d_00b d_00c d_00d d_00e d_00f d_010 d_011 d_012 d_013 d_014 d_015\
+	d_016 d_017 d_018 d_019 d_01a d_01b d_01c d_01d d_01e d_01f d_020\
+	d_021 d_022 d_023 d_024 d_025 d_026 d_027 d_028 d_029 d_02a d_02b\
+	d_02c d_02d d_02e d_02f d_030 d_031 d_032 d_033 d_034 d_035 d_036\
+	d_037 d_038 d_039 d_03a d_03b d_03c d_03d d_03e d_03f d_040 d_041\
+	d_042 d_043 d_044 d_045 d_046 d_047 d_048 d_049 d_04a d_04b d_04c\
+	d_04d d_04e d_04f d_050 d_051 d_052 d_053 d_054 d_055 d_056 d_057\
+	d_058 d_059 d_05a d_05b d_05c d_05d d_05e d_05f d_060 d_061 d_062\
+	d_063 d_064 d_065 d_066 d_067 d_068 d_069 d_06a d_06b d_06c d_06d\
+	d_06e d_06f d_070 d_071 d_072 d_073 d_074 d_075 d_076 d_077 d_078\
+	d_079 d_07a d_07b d_07c d_07d d_07e d_07f d_080 d_081 d_082 d_083\
+	d_084 d_085 d_086 d_087 d_088 d_089 d_08a d_08b d_08c d_08d d_08e\
+	d_08f d_090 d_091 d_092 d_093 d_094 d_095 d_096 d_097 d_098 d_099\
+	d_09a d_09b d_09c d_09d d_09e d_09f d_0a0 d_0a1 d_0a2 d_0a3 d_0a4\
+	d_0a5 d_0a6 d_0a7 d_0a8 d_0a9 d_0aa d_0ab d_0ac d_0ad d_0ae d_0af\
+	d_0b0 d_0b1 d_0b2 d_0b3 d_0b4 d_0b5 d_0b6 d_0b7 d_0b8 d_0b9 d_0ba\
+	d_0bb d_0bc d_0bd d_0be d_0bf d_0c0 d_0c1 d_0c2 d_0c3 d_0c4 d_0c5\
+	d_0c6 d_0c7 d_0c8 d_0c9 d_0ca d_0cb d_0cc d_0cd d_0ce d_0cf d_0d0\
+	d_0d1 d_0d2 d_0d3 d_0d4 d_0d5 d_0d6 d_0d7 d_0d8 d_0d9 d_0da d_0db\
+	d_0dc d_0dd d_0de d_0df d_0e0 d_0e1 d_0e2 d_0e3 d_0e4 d_0e5 d_0e6\
+	d_0e7 d_0e8 d_0e9 d_0ea d_0eb d_0ec d_0ed d_0ee d_0ef d_0f0 d_0f1\
+	d_0f2 d_0f3 d_0f4 d_0f5 d_0f6 d_0f7 d_0f8 d_0f9 d_0fa d_0fb d_0fc\
+	d_0fd d_0fe d_0ff d_100 d_101 d_102 d_103 d_104 d_105 d_106 d_107\
+	d_108 d_109 d_10a d_10b d_10c d_10d d_10e d_10f d_110 d_111 d_112\
+	d_113 d_114 d_115 d_116 d_117 d_118 d_119 d_11a d_11b d_11c d_11d\
+	d_11e d_11f d_120 d_121 d_122 d_123 d_124 d_125 d_126 d_127 d_128\
+	d_129 d_12a d_12b d_12c d_12d d_12e d_12f d_130 d_131 d_132 d_133\
+	d_134 d_135 d_136 d_137 d_138 d_139 d_13a d_13b d_13c d_13d d_13e\
+	d_13f d_140 d_141 d_142 d_143 d_144 d_145 d_146 d_147 d_148 d_149\
+	d_14a d_14b d_14c d_14d d_14e d_14f d_150 d_151 d_152 d_153 d_154\
+	d_155 d_156 d_157 d_158 d_159 d_15a d_15b d_15c d_15d
+		$(MAKEMAKE) -edit Makefile.PC $(BAKFILE) $(DEPLIST)
+
+d_000:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_misc_c -o sys_misc.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_001:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_open_c -o sys_open.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_002:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_write_c -o sys_write.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_003:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_error_c -o sys_error.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_004:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_seek_c -o sys_seek.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_005:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_ensure_c -o sys_ensure.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_006:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_flen_c -o sys_flen.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_007:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_tmpnam_c -o sys_tmpnam.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_008:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_wrch_c -o sys_wrch.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_009:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_system_c -o sys_system.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_00a:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_remove_c -o sys_remove.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_00b:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_rename_c -o sys_rename.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_00c:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_command_c -o sys_command.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_00d:	..\..\angel\sysapp.c
+	$(CC) $(DCFLAGS) -DTARGET -Dsys_clock_c -o sys_clock.o ..\..\angel\sysapp.c >> $(DEPLIST)
+d_00e:	..\..\angel\suppapp.s
+	$(AS) $(DAFLAGS)  -o suppapp.o ..\..\angel\suppapp.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_00f:	..\..\angel\os.s
+	$(AS) $(DAFLAGS) -PD "linked_fpe SETL {FALSE}" -o oslow.o ..\..\angel\os.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_010:	..\..\angel\os.c
+	$(CC) $(DCFLAGS)  -o oshigh.o ..\..\angel\os.c >> $(DEPLIST)
+d_011:	..\..\heapalloc.c
+	$(CC) $(DCFLAGS) -Dalloc_c -o malloc.o ..\..\heapalloc.c >> $(DEPLIST)
+d_012:	..\..\heapalloc.c
+	$(CC) $(DCFLAGS) -Dfree_c -o free.o ..\..\heapalloc.c >> $(DEPLIST)
+d_013:	..\..\heapalloc.c
+	$(CC) $(DCFLAGS) -Drealloc_c -o realloc.o ..\..\heapalloc.c >> $(DEPLIST)
+d_014:	..\..\heapalloc.c
+	$(CC) $(DCFLAGS) -Dcalloc_c -o calloc.o ..\..\heapalloc.c >> $(DEPLIST)
+d_015:	..\..\heapalloc.c
+	$(CC) $(DCFLAGS) -Dstats_c -o stats.o ..\..\heapalloc.c >> $(DEPLIST)
+d_016:	..\..\heap1.c
+	$(CC) $(DCFLAGS) -Dalloc_c -o h1_alloc.o ..\..\heap1.c >> $(DEPLIST)
+d_017:	..\..\heap1.c
+	$(CC) $(DCFLAGS) -Dextend_c -o h1_extend.o ..\..\heap1.c >> $(DEPLIST)
+d_018:	..\..\heap1.c
+	$(CC) $(DCFLAGS) -Dfree_c -o h1_free.o ..\..\heap1.c >> $(DEPLIST)
+d_019:	..\..\heap1.c
+	$(CC) $(DCFLAGS) -Drealloc_c -o h1_realloc.o ..\..\heap1.c >> $(DEPLIST)
+d_01a:	..\..\heap1.c
+	$(CC) $(DCFLAGS) -Dstats_c -o h1_stats.o ..\..\heap1.c >> $(DEPLIST)
+d_01b:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_neg\"" -o llneg.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_01c:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_add\"" -o lladd.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_01d:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_sub\"" -o llsub.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_01e:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_rsb\"" -o llrsb.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_01f:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_mul\"" -o llmul.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_020:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_addls\"" -o lladdls.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_021:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_subls\"" -o llsubls.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_022:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_rsbls\"" -o llrsbls.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_023:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_addlu\"" -o lladdlu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_024:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_sublu\"" -o llsublu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_025:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_rsblu\"" -o llrsblu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_026:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_mullu\"" -o llmullu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_027:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_mulls\"" -o llmulls.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_028:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_addss\"" -o lladdss.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_029:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_subss\"" -o llsubss.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02a:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_rsbss\"" -o llrsbss.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02b:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_mulss\"" -o llmulss.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02c:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_adduu\"" -o lladduu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02d:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_subuu\"" -o llsubuu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02e:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_rsbuu\"" -o llrsbuu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_02f:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_muluu\"" -o llmuluu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_030:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_sdiv\"" -o llsdiv.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_031:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_srdv\"" -o llsrdv.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_032:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_udiv\"" -o lludiv.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_033:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_urdv\"" -o llurdv.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_034:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_not\"" -o llnot.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_035:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_and\"" -o lland.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_036:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_or\"" -o llor.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_037:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_eor\"" -o lleor.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_038:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_shift_l\"" -o llshl.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_039:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_ushift_r\"" -o llushr.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03a:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_sshift_r\"" -o llsshr.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03b:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_cmpeq\"" -o llcmpeq.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03c:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_cmpne\"" -o llcmpne.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03d:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_ucmpgt\"" -o llucmpgt.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03e:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_ucmpge\"" -o llucmpge.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_03f:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_ucmplt\"" -o llucmplt.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_040:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_ucmple\"" -o llucmple.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_041:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_scmpgt\"" -o llscmpgt.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_042:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_scmpge\"" -o llscmpge.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_043:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_scmplt\"" -o llscmplt.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_044:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_scmple\"" -o llscmple.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_045:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_from_l\"" -o llfroml.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_046:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_from_u\"" -o llfromu.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_047:	..\..\longlong.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_ll_to_l\"" -o lltol.o ..\..\longlong.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_048:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS)  -PD "ffltll_s SETL {TRUE}"  -o ffltll.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_049:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS)  -PD "dfltll_s SETL {TRUE}"  -o dfltll.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04a:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS)  -PD "ll_sfrom_d_s SETL {TRUE}"  -o llsfromd.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04b:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS)  -PD "ll_ufrom_d_s SETL {TRUE}"  -o llufromd.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04c:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS)  -PD "ll_sfrom_f_s SETL {TRUE}"  -o llsfromf.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04d:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS)  -PD "ll_ufrom_f_s SETL {TRUE}"  -o llufromf.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04e:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "dflt_s SETL {TRUE}" -o dflt.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_04f:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS) -PD "fflt_s SETL {TRUE}" -o fflt.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_050:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS) -PD "ffix_s SETL {TRUE}" -o ffix.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_051:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS) -PD "ffixu_s SETL {TRUE}" -o ffixu.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_052:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "dfix_s SETL {TRUE}" -o dfix.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_053:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "dfixu_s SETL {TRUE}" -o dfixu.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_054:	..\..\fplib\except.s
+	$(AS) $(DAFLAGS) -PD "except_s SETL {TRUE}" -o except.o ..\..\fplib\except.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_055:	..\..\fplib\except.s
+	$(AS) $(DAFLAGS) -PD "fcheck_s SETL {TRUE}" -o fcheck.o ..\..\fplib\except.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_056:	..\..\fplib\except.s
+	$(AS) $(DAFLAGS) -PD "liberror_s SETL {TRUE}" -o liberror.o ..\..\fplib\except.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_057:	..\..\fplib\except.s
+	$(AS) $(DAFLAGS) -PD "fpdata_s SETL {TRUE}" -o fpdata.o ..\..\fplib\except.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_058:	..\..\fplib\except.s
+	$(AS) $(DAFLAGS) -PD "status_s SETL {TRUE}" -o status.o ..\..\fplib\except.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_059:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "add_s SETL {TRUE}" -o dadd.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05a:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "sub_s SETL {TRUE}" -o dsub.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05b:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "rsb_s SETL {TRUE}" -o drsb.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05c:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "mul_s SETL {TRUE}" -o dmul.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05d:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "div_s SETL {TRUE}" -o ddiv.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05e:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "rdv_s SETL {TRUE}" -o drdv.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_05f:	..\..\fplib\veneer_d.s
+	$(AS) $(DAFLAGS) -PD "sqrt_s SETL {TRUE}" -o dsqrt.o ..\..\fplib\veneer_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_060:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "add_s SETL {TRUE}" -o eadd.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_061:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "sub_s SETL {TRUE}" -o esub.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_062:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "mul_s SETL {TRUE}" -o emul.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_063:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "square_s SETL {TRUE}" -o esquare.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_064:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "div_s SETL {TRUE}" -o ediv.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_065:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "rdv_s SETL {TRUE}" -o erdv.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_066:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "sqrt_s SETL {TRUE}" -o esqrt.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_067:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "fix_s SETL {TRUE}" -o efix.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_068:	..\..\fplib\veneer_e.s
+	$(AS) $(DAFLAGS) -PD "fixu_s SETL {TRUE}" -o efixu.o ..\..\fplib\veneer_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_069:	..\..\fplib\veneer_f.s
+	$(AS) $(DAFLAGS) -PD "add_s SETL {TRUE}" -o fadd.o ..\..\fplib\veneer_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06a:	..\..\fplib\veneer_f.s
+	$(AS) $(DAFLAGS) -PD "mul_s SETL {TRUE}" -o fmul.o ..\..\fplib\veneer_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06b:	..\..\fplib\veneer_f.s
+	$(AS) $(DAFLAGS) -PD "div_s SETL {TRUE}" -o fdiv.o ..\..\fplib\veneer_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06c:	..\..\fplib\veneer_f.s
+	$(AS) $(DAFLAGS) -PD "fnorm2_s SETL {TRUE}" -o fnorm2.o ..\..\fplib\veneer_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06d:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "mul_s SETL {TRUE}" -o mul.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06e:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "addsub_s SETL {TRUE}" -o addsub.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_06f:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "div_s SETL {TRUE}" -o div.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_070:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "sqrt_s SETL {TRUE}" -o sqrt.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_071:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "fix_s SETL {TRUE}" -o fix.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_072:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "fixu_s SETL {TRUE}" -o fixu.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_073:	..\..\fplib\normal.s
+	$(AS) $(DAFLAGS)  -o normal.o ..\..\fplib\normal.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_074:	..\..\fplib\basic.s
+	$(AS) $(DAFLAGS)  -o basic.o ..\..\fplib\basic.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_075:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "eqf_s SETL {TRUE}" -o deqf.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_076:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "leqf_s SETL {TRUE}" -o dleqf.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_077:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "geqf_s SETL {TRUE}" -o dgeqf.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_078:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "eq_s SETL {TRUE}" -o deq.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_079:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "neq_s SETL {TRUE}" -o dneq.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07a:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "ls_s SETL {TRUE}" -o dls.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07b:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "leq_s SETL {TRUE}" -o dleq.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07c:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "gr_s SETL {TRUE}" -o dgr.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07d:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "geq_s SETL {TRUE}" -o dgeq.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07e:	..\..\fplib\basic_d.s
+	$(AS) $(DAFLAGS) -PD "compare_s SETL {TRUE}" -o dcompare.o ..\..\fplib\basic_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_07f:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "eqf_s SETL {TRUE}" -o feqf.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_080:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "leqf_s SETL {TRUE}" -o fleqf.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_081:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "geqf_s SETL {TRUE}" -o fgeqf.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_082:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "eq_s SETL {TRUE}" -o feq.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_083:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "neq_s SETL {TRUE}" -o fneq.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_084:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "ls_s SETL {TRUE}" -o fls.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_085:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "leq_s SETL {TRUE}" -o fleq.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_086:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "gr_s SETL {TRUE}" -o fgr.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_087:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "geq_s SETL {TRUE}" -o fgeq.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_088:	..\..\fplib\basic_f.s
+	$(AS) $(DAFLAGS) -PD "compare_s SETL {TRUE}" -o fcompare.o ..\..\fplib\basic_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_089:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "eq_s SETL {TRUE}" -o eeq.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08a:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "neq_s SETL {TRUE}" -o eneq.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08b:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "ls_s SETL {TRUE}" -o els.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08c:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "leq_s SETL {TRUE}" -o eleq.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08d:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "gr_s SETL {TRUE}" -o egr.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08e:	..\..\fplib\basic_e.s
+	$(AS) $(DAFLAGS) -PD "geq_s SETL {TRUE}" -o egeq.o ..\..\fplib\basic_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_08f:	..\..\fplib\veneer.s
+	$(AS) $(DAFLAGS) -PD "compare_s SETL {TRUE}" -o ecompare.o ..\..\fplib\veneer.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_090:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "d2e_s SETL {TRUE}" -o d2e.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_091:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "e2d_s SETL {TRUE}" -o e2d.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_092:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "frexp_s SETL {TRUE}" -o frexp.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_093:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "ldexp_s SETL {TRUE}" -o ldexp.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_094:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "floor_s SETL {TRUE}" -o floor.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_095:	..\..\fplib\format_d.s
+	$(AS) $(DAFLAGS) -PD "modf_s SETL {TRUE}" -o modf.o ..\..\fplib\format_d.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_096:	..\..\fplib\fmod.c
+	$(CC) $(DCFLAGS) -Dfmod_c -o fmod.o ..\..\fplib\fmod.c >> $(DEPLIST)
+d_097:	..\..\fplib\nans.s
+	$(AS) $(DAFLAGS)  -o nans.o ..\..\fplib\nans.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_098:	..\..\fplib\format.s
+	$(AS) $(DAFLAGS) -PD "d2f_s SETL {TRUE}" -o d2f.o ..\..\fplib\format.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_099:	..\..\fplib\format.s
+	$(AS) $(DAFLAGS) -PD "f2d_s SETL {TRUE}" -o f2d.o ..\..\fplib\format.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09a:	..\..\fplib\format_f.s
+	$(AS) $(DAFLAGS) -PD "e2f_s SETL {TRUE}" -o e2f.o ..\..\fplib\format_f.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09b:	..\..\fplib\format_e.s
+	$(AS) $(DAFLAGS) -PD "norm_op1_s SETL {TRUE}" -o norm_op1.o ..\..\fplib\format_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09c:	..\..\fplib\format_e.s
+	$(AS) $(DAFLAGS) -PD "norm_op2_s SETL {TRUE}" -o norm_op2.o ..\..\fplib\format_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09d:	..\..\fplib\format_e.s
+	$(AS) $(DAFLAGS) -PD "eflt_s SETL {TRUE}" -o eflt.o ..\..\fplib\format_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09e:	..\..\fplib\format_e.s
+	$(AS) $(DAFLAGS) -PD "efltu_s SETL {TRUE}" -o efltu.o ..\..\fplib\format_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_09f:	..\..\fplib\format_e.s
+	$(AS) $(DAFLAGS) -PD "e2e_s SETL {TRUE}" -o e2e.o ..\..\fplib\format_e.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0a0:	..\..\fplib\thumb.s
+	$(AS) $(DAFLAGS) -PD "range_s SETL {TRUE}" -o range.o ..\..\fplib\thumb.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0a1:	..\..\fplib\thumb.s
+	$(AS) $(DAFLAGS) -PD "poly_s SETL {TRUE}" -o poly.o ..\..\fplib\thumb.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0a2:	..\..\fplib\thumb.s
+	$(AS) $(DAFLAGS) -PD "poly0_s SETL {TRUE}" -o poly0.o ..\..\fplib\thumb.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0a3:	..\..\fplib\thumb.s
+	$(AS) $(DAFLAGS) -PD "poly1_s SETL {TRUE}" -o poly1.o ..\..\fplib\thumb.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0a4:	..\..\fplib\exp.c
+	$(CC) $(DCFLAGS) -Dexp_c -o exp.o ..\..\fplib\exp.c >> $(DEPLIST)
+d_0a5:	..\..\fplib\exp.c
+	$(CC) $(DCFLAGS) -D_exp_c -o _exp.o ..\..\fplib\exp.c >> $(DEPLIST)
+d_0a6:	..\..\fplib\log.c
+	$(CC) $(DCFLAGS) -Dlog_c -o log.o ..\..\fplib\log.c >> $(DEPLIST)
+d_0a7:	..\..\fplib\log.c
+	$(CC) $(DCFLAGS) -Dlog10_c -o log10.o ..\..\fplib\log.c >> $(DEPLIST)
+d_0a8:	..\..\fplib\log.c
+	$(CC) $(DCFLAGS) -D_log_c -o _log.o ..\..\fplib\log.c >> $(DEPLIST)
+d_0a9:	..\..\fplib\sincos.c
+	$(CC) $(DCFLAGS) -Dsin_c -o sin.o ..\..\fplib\sincos.c >> $(DEPLIST)
+d_0aa:	..\..\fplib\sincos.c
+	$(CC) $(DCFLAGS) -Dcos_c -o cos.o ..\..\fplib\sincos.c >> $(DEPLIST)
+d_0ab:	..\..\fplib\sincos.c
+	$(CC) $(DCFLAGS) -D_sincos_c -o _sincos.o ..\..\fplib\sincos.c >> $(DEPLIST)
+d_0ac:	..\..\fplib\tan.c
+	$(CC) $(DCFLAGS)  -o tan.o ..\..\fplib\tan.c >> $(DEPLIST)
+d_0ad:	..\..\fplib\atan.c
+	$(CC) $(DCFLAGS) -Datan_c -o atan.o ..\..\fplib\atan.c >> $(DEPLIST)
+d_0ae:	..\..\fplib\atan.c
+	$(CC) $(DCFLAGS) -Datan2_c -o atan2.o ..\..\fplib\atan.c >> $(DEPLIST)
+d_0af:	..\..\fplib\atan.c
+	$(CC) $(DCFLAGS) -D_atnpol_c -o _atnpol.o ..\..\fplib\atan.c >> $(DEPLIST)
+d_0b0:	..\..\fplib\asinacos.c
+	$(CC) $(DCFLAGS) -Dasin_c -o asin.o ..\..\fplib\asinacos.c >> $(DEPLIST)
+d_0b1:	..\..\fplib\asinacos.c
+	$(CC) $(DCFLAGS) -Dacos_c -o acos.o ..\..\fplib\asinacos.c >> $(DEPLIST)
+d_0b2:	..\..\fplib\asinacos.c
+	$(CC) $(DCFLAGS) -D_asnacs_c -o _asnacs.o ..\..\fplib\asinacos.c >> $(DEPLIST)
+d_0b3:	..\..\fplib\sinh.c
+	$(CC) $(DCFLAGS)  -o sinh.o ..\..\fplib\sinh.c >> $(DEPLIST)
+d_0b4:	..\..\fplib\cosh.c
+	$(CC) $(DCFLAGS)  -o cosh.o ..\..\fplib\cosh.c >> $(DEPLIST)
+d_0b5:	..\..\fplib\tanh.c
+	$(CC) $(DCFLAGS)  -o tanh.o ..\..\fplib\tanh.c >> $(DEPLIST)
+d_0b6:	..\..\fplib\pow.c
+	$(CC) $(DCFLAGS)  -o pow.o ..\..\fplib\pow.c >> $(DEPLIST)
+d_0b7:	..\..\fplib\constant.c
+	$(CC) $(DCFLAGS)  -o __fp_con.o ..\..\fplib\constant.c >> $(DEPLIST)
+d_0b8:	..\..\math.c
+	$(CC) $(DCFLAGS) -Dabs_c -o mabs.o ..\..\math.c >> $(DEPLIST)
+d_0b9:	..\..\math.c
+	$(CC) $(DCFLAGS) -Ddiv_c -o mdiv.o ..\..\math.c >> $(DEPLIST)
+d_0ba:	..\..\math.c
+	$(CC) $(DCFLAGS) -Dlabs_c -o mlabs.o ..\..\math.c >> $(DEPLIST)
+d_0bb:	..\..\math.c
+	$(CC) $(DCFLAGS) -Dldiv_c -o mldiv.o ..\..\math.c >> $(DEPLIST)
+d_0bc:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Dctype_c -o ctype.o ..\..\ctype.c >> $(DEPLIST)
+d_0bd:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disalnum_c -o isalnum.o ..\..\ctype.c >> $(DEPLIST)
+d_0be:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disalpha_c -o isalpha.o ..\..\ctype.c >> $(DEPLIST)
+d_0bf:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Discntrl_c -o iscntrl.o ..\..\ctype.c >> $(DEPLIST)
+d_0c0:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disdigit_c -o isdigit.o ..\..\ctype.c >> $(DEPLIST)
+d_0c1:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disgraph_c -o isgraph.o ..\..\ctype.c >> $(DEPLIST)
+d_0c2:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Dislower_c -o islower.o ..\..\ctype.c >> $(DEPLIST)
+d_0c3:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disprint_c -o isprint.o ..\..\ctype.c >> $(DEPLIST)
+d_0c4:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Dispunct_c -o ispunct.o ..\..\ctype.c >> $(DEPLIST)
+d_0c5:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disspace_c -o isspace.o ..\..\ctype.c >> $(DEPLIST)
+d_0c6:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disupper_c -o isupper.o ..\..\ctype.c >> $(DEPLIST)
+d_0c7:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Disxdigit_c -o isxdigit.o ..\..\ctype.c >> $(DEPLIST)
+d_0c8:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Dtolower_c -o tolower.o ..\..\ctype.c >> $(DEPLIST)
+d_0c9:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -Dtoupper_c -o toupper.o ..\..\ctype.c >> $(DEPLIST)
+d_0ca:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_sputc_c -o _sputc.o ..\..\printf.c >> $(DEPLIST)
+d_0cb:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dsprintf_c -o sprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0cc:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dvsprintf_c -o vsprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0cd:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_sprintf_c -o _sprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0ce:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D__vfprintf_c -o __vfpntf.o ..\..\printf.c >> $(DEPLIST)
+d_0cf:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_nofp_disp_c -o nofpdisp.o ..\..\printf.c >> $(DEPLIST)
+d_0d0:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_vfprintf_c -o _vfprntf.o ..\..\printf.c >> $(DEPLIST)
+d_0d1:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_vsprintf_c -o _vsprntf.o ..\..\printf.c >> $(DEPLIST)
+d_0d2:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -D_chval_c -o _chval.o ..\..\scanf.c >> $(DEPLIST)
+d_0d3:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_fp_disp_c -o _fp_disp.o ..\..\printf.c >> $(DEPLIST)
+d_0d4:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -D_scanf_c -o _scanf.o ..\..\scanf.c >> $(DEPLIST)
+d_0d5:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -D_sgetc_c -o sgetc.o ..\..\scanf.c >> $(DEPLIST)
+d_0d6:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -D_strtoul_c -o _strtoul.o ..\..\scanf.c >> $(DEPLIST)
+d_0d7:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dstrtod_c -o strtod.o ..\..\scanf.c >> $(DEPLIST)
+d_0d8:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dstrtol_c -o strtol.o ..\..\scanf.c >> $(DEPLIST)
+d_0d9:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dstrtoul_c -o strtoul.o ..\..\scanf.c >> $(DEPLIST)
+d_0da:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dsscanf_c -o sscanf.o ..\..\scanf.c >> $(DEPLIST)
+d_0db:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Datof_c -o atof.o ..\..\scanf.c >> $(DEPLIST)
+d_0dc:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Datoi_c -o atoi.o ..\..\scanf.c >> $(DEPLIST)
+d_0dd:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Datol_c -o atol.o ..\..\scanf.c >> $(DEPLIST)
+d_0de:	..\..\ctype.c
+	$(CC) $(DCFLAGS) -D_set8859_c -o _set8859.o ..\..\ctype.c >> $(DEPLIST)
+d_0df:	..\..\xmath.c
+	$(CC) $(DCFLAGS)  -o xmath.o ..\..\xmath.c >> $(DEPLIST)
+d_0e0:	..\..\image.s
+	$(AS) $(DAFLAGS)  -o image.o ..\..\image.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_0e1:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dfprintf_c -o fprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0e2:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dprintf_c -o printf.o ..\..\printf.c >> $(DEPLIST)
+d_0e3:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dvfprintf_c -o vfprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0e4:	..\..\printf.c
+	$(CC) $(DCFLAGS) -Dvprintf_c -o vprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0e5:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_printf_c -o _printf.o ..\..\printf.c >> $(DEPLIST)
+d_0e6:	..\..\printf.c
+	$(CC) $(DCFLAGS) -D_fprintf_c -o _fprintf.o ..\..\printf.c >> $(DEPLIST)
+d_0e7:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dscanf_c -o scanf.o ..\..\scanf.c >> $(DEPLIST)
+d_0e8:	..\..\scanf.c
+	$(CC) $(DCFLAGS) -Dfscanf_c -o fscanf.o ..\..\scanf.c >> $(DEPLIST)
+d_0e9:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dbackspace_c -o backspce.o ..\..\stdio.c >> $(DEPLIST)
+d_0ea:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dclearerr_c -o clearerr.o ..\..\stdio.c >> $(DEPLIST)
+d_0eb:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfeof_c -o feof.o ..\..\stdio.c >> $(DEPLIST)
+d_0ec:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dferror_c -o ferror.o ..\..\stdio.c >> $(DEPLIST)
+d_0ed:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfflush_c -o fflush.o ..\..\stdio.c >> $(DEPLIST)
+d_0ee:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfgetc_c -o fgetc.o ..\..\stdio.c >> $(DEPLIST)
+d_0ef:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfgetpos_c -o fgetpos.o ..\..\stdio.c >> $(DEPLIST)
+d_0f0:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfgets_c -o fgets.o ..\..\stdio.c >> $(DEPLIST)
+d_0f1:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfisatty_c -o fisatty.o ..\..\stdio.c >> $(DEPLIST)
+d_0f2:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfilbuf_c -o filbuf.o ..\..\stdio.c >> $(DEPLIST)
+d_0f3:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dflsbuf_c -o flsbuf.o ..\..\stdio.c >> $(DEPLIST)
+d_0f4:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfputc_c -o fputc.o ..\..\stdio.c >> $(DEPLIST)
+d_0f5:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfputs_c -o fputs.o ..\..\stdio.c >> $(DEPLIST)
+d_0f6:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfread_c -o fread.o ..\..\stdio.c >> $(DEPLIST)
+d_0f7:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfseek_c -o fseek.o ..\..\stdio.c >> $(DEPLIST)
+d_0f8:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfsetpos_c -o fsetpos.o ..\..\stdio.c >> $(DEPLIST)
+d_0f9:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dftell_c -o ftell.o ..\..\stdio.c >> $(DEPLIST)
+d_0fa:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dfwrite_c -o fwrite.o ..\..\stdio.c >> $(DEPLIST)
+d_0fb:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dgetc_c -o getc.o ..\..\stdio.c >> $(DEPLIST)
+d_0fc:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dgetchar_c -o getchar.o ..\..\stdio.c >> $(DEPLIST)
+d_0fd:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dgets_c -o gets.o ..\..\stdio.c >> $(DEPLIST)
+d_0fe:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dosf_c -o osf.o ..\..\stdio.c >> $(DEPLIST)
+d_0ff:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dperror_c -o perror.o ..\..\stdio.c >> $(DEPLIST)
+d_100:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dputc_c -o putc.o ..\..\stdio.c >> $(DEPLIST)
+d_101:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dputchar_c -o putchar.o ..\..\stdio.c >> $(DEPLIST)
+d_102:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dputs_c -o puts.o ..\..\stdio.c >> $(DEPLIST)
+d_103:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Drewind_c -o rewind.o ..\..\stdio.c >> $(DEPLIST)
+d_104:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dsetbuf_c -o setbuf.o ..\..\stdio.c >> $(DEPLIST)
+d_105:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dsetvbuf_c -o setvbuf.o ..\..\stdio.c >> $(DEPLIST)
+d_106:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dstdio_c -o stdio.o ..\..\stdio.c >> $(DEPLIST)
+d_107:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dtmpnam_c -o tmpnam.o ..\..\stdio.c >> $(DEPLIST)
+d_108:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -Dungetc_c -o ungetc.o ..\..\stdio.c >> $(DEPLIST)
+d_109:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -D_sys_msg_c -o _sys_msg.o ..\..\stdio.c >> $(DEPLIST)
+d_10a:	..\..\stdio.c
+	$(CC) $(DCFLAGS) -D__dup_c -o __dup.o ..\..\stdio.c >> $(DEPLIST)
+d_10b:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Drand_c -o rand.o ..\..\stdlib.c >> $(DEPLIST)
+d_10c:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -DANSI_rand_c -o ansirand.o ..\..\stdlib.c >> $(DEPLIST)
+d_10d:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Datexit_c -o atexit.o ..\..\stdlib.c >> $(DEPLIST)
+d_10e:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Dexit_c -o exit.o ..\..\stdlib.c >> $(DEPLIST)
+d_10f:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Dabort_c -o abort.o ..\..\stdlib.c >> $(DEPLIST)
+d_110:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -D_version_c -o _version.o ..\..\stdlib.c >> $(DEPLIST)
+d_111:	..\..\signal.c
+	$(CC) $(DCFLAGS)  -o signal.o ..\..\signal.c >> $(DEPLIST)
+d_112:	..\..\assert.c
+	$(CC) $(DCFLAGS)  -o assert.o ..\..\assert.c >> $(DEPLIST)
+d_113:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dlocale_c -o locale.o ..\..\locale.c >> $(DEPLIST)
+d_114:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dlocaleconv_c -o localecv.o ..\..\locale.c >> $(DEPLIST)
+d_115:	..\..\locale.c
+	$(CC) $(DCFLAGS) -D_lc_c -o _lc.o ..\..\locale.c >> $(DEPLIST)
+d_116:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dmblen_c -o mblen.o ..\..\locale.c >> $(DEPLIST)
+d_117:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dmbtowc_c -o mbtowc.o ..\..\locale.c >> $(DEPLIST)
+d_118:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dwctomb_c -o wctomb.o ..\..\locale.c >> $(DEPLIST)
+d_119:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dmbstowcs_c -o mbstowcs.o ..\..\locale.c >> $(DEPLIST)
+d_11a:	..\..\locale.c
+	$(CC) $(DCFLAGS) -Dwcstombs_c -o wcstombs.o ..\..\locale.c >> $(DEPLIST)
+d_11b:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Dqsort_c -o qsort.o ..\..\stdlib.c >> $(DEPLIST)
+d_11c:	..\..\stdlib.c
+	$(CC) $(DCFLAGS) -Dbsearch_c -o bsearch.o ..\..\stdlib.c >> $(DEPLIST)
+d_11d:	..\..\thumb\memcmp.s
+	$(AS) $(DAFLAGS)  -o memcmp.o ..\..\thumb\memcmp.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_11e:	..\..\thumb\memset.s
+	$(AS) $(DAFLAGS)  -o memset.o ..\..\thumb\memset.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_11f:	..\..\thumb\memmove.s
+	$(AS) $(DAFLAGS)  -o memmove.o ..\..\thumb\memmove.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_120:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrcmp_c -o strcmp.o ..\..\string.c >> $(DEPLIST)
+d_121:	..\..\thumb\strcpy.s
+	$(AS) $(DAFLAGS)  -o strcpy.o ..\..\thumb\strcpy.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_122:	..\..\thumb\strncmp.s
+	$(AS) $(DAFLAGS)  -o strncmp.o ..\..\thumb\strncmp.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_123:	..\..\thumb\strncpy.s
+	$(AS) $(DAFLAGS)  -o strncpy.o ..\..\thumb\strncpy.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_124:	..\..\thumb\strlen.s
+	$(AS) $(DAFLAGS)  -o strlen.o ..\..\thumb\strlen.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_125:	..\..\thumb\call_via.s
+	$(AS) $(DAFLAGS)  -o call_via.o ..\..\thumb\call_via.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_126:	..\..\memcpset.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"_memcpy\"" -o _memcpy.o ..\..\memcpset.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_127:	..\..\memcpset.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"uread4\"" -o uread4.o ..\..\memcpset.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_128:	..\..\memcpset.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"uwrite4\"" -o uwrite4.o ..\..\memcpset.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_129:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrcoll_c -o strcoll.o ..\..\string.c >> $(DEPLIST)
+d_12a:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrerror_c -o strerror.o ..\..\string.c >> $(DEPLIST)
+d_12b:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrtok_c -o strtok.o ..\..\string.c >> $(DEPLIST)
+d_12c:	..\..\string.c
+	$(CC) $(DCFLAGS) -D_strerror_c -o _streror.o ..\..\string.c >> $(DEPLIST)
+d_12d:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dmemchr_c -o memchr.o ..\..\string.c >> $(DEPLIST)
+d_12e:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrcat_c -o strcat.o ..\..\string.c >> $(DEPLIST)
+d_12f:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrchr_c -o strchr.o ..\..\string.c >> $(DEPLIST)
+d_130:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrcspn_c -o strcspn.o ..\..\string.c >> $(DEPLIST)
+d_131:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrncat_c -o strncat.o ..\..\string.c >> $(DEPLIST)
+d_132:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrpbrk_c -o strpbrk.o ..\..\string.c >> $(DEPLIST)
+d_133:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrrchr_c -o strrchr.o ..\..\string.c >> $(DEPLIST)
+d_134:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrspn_c -o strspn.o ..\..\string.c >> $(DEPLIST)
+d_135:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrstr_c -o strstr.o ..\..\string.c >> $(DEPLIST)
+d_136:	..\..\string.c
+	$(CC) $(DCFLAGS) -Dstrxfrm_c -o strxfrm.o ..\..\string.c >> $(DEPLIST)
+d_137:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dasctime_c -o asctime.o ..\..\time.c >> $(DEPLIST)
+d_138:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dctime_c -o ctime.o ..\..\time.c >> $(DEPLIST)
+d_139:	..\..\time.c
+	$(CC) $(DCFLAGS) -Ddifftime_c -o difftime.o ..\..\time.c >> $(DEPLIST)
+d_13a:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dgmtime_c -o gmtime.o ..\..\time.c >> $(DEPLIST)
+d_13b:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dlocaltime_c -o locltime.o ..\..\time.c >> $(DEPLIST)
+d_13c:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dmktime_c -o mktime.o ..\..\time.c >> $(DEPLIST)
+d_13d:	..\..\time.c
+	$(CC) $(DCFLAGS) -Dstrftime_c -o strftime.o ..\..\time.c >> $(DEPLIST)
+d_13e:	..\..\time.c
+	$(CC) $(DCFLAGS) -D_monlen_c -o _monlen.o ..\..\time.c >> $(DEPLIST)
+d_13f:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"divtest\"" -o rtdivtst.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_140:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"sdiv10\"" -o rtsdiv10.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_141:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"udiv10\"" -o rtudiv10.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_142:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"dspdiv32\"" -o dspdiv32.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_143:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"dspdiv32u\"" -o dspdiv32u.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_144:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"dspdiv64\"" -o dspdiv64.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_145:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"sdiv_unrolled8\"" -o rt_sdiv.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_146:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"udiv_unrolled8\"" -o rt_udiv.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_147:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -32 -PD "make SETS \"divtest\"" -o divtst.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_148:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -32 -PD "make SETS \"sdiv10\"" -o sdiv10.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_149:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -32 -PD "make SETS \"udiv10\"" -o udiv10.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14a:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -32 -PD "make SETS \"sdiv_rolled\"" -o _sdiv.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14b:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -32 -PD "make SETS \"udiv_rolled\"" -o _udiv.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14c:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"rwcheck\"" -o rtrwchck.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14d:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"proccheck\"" -o proccheck.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14e:	..\..\setjmp.s
+	$(AS) $(DAFLAGS)  -o setjmp.o ..\..\setjmp.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_14f:	..\..\unhosted.s
+	$(AS) $(DAFLAGS) -PD "make SETS \"div0\"" -o rt_div0.o ..\..\unhosted.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_150:	..\..\h_signal.s
+	$(AS) $(DAFLAGS)  -o h_signal.o ..\..\h_signal.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_151:	..\..\stkcont.s
+	$(AS) $(DAFLAGS)  -o stkcont.o ..\..\stkcont.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_152:	..\..\unwind.s
+	$(AS) $(DAFLAGS)  -o unwind.o ..\..\unwind.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_153:	..\..\kallocs.s
+	$(AS) $(DAFLAGS)  -o kallocs.o ..\..\kallocs.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_154:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -Dlib_init_c -o lib_init.o ..\..\armsys.c >> $(DEPLIST)
+d_155:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -D_sysdie_c -o _sysdie.o ..\..\armsys.c >> $(DEPLIST)
+d_156:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -D_sys_alloc_c -o sysalloc.o ..\..\armsys.c >> $(DEPLIST)
+d_157:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -Dargerr_c -o argerr.o ..\..\armsys.c >> $(DEPLIST)
+d_158:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -D_main_c -o _main.o ..\..\armsys.c >> $(DEPLIST)
+d_159:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -D_main_arg_c -DSTDFILE_REDIRECTION -o _main_arg.o ..\..\armsys.c >> $(DEPLIST)
+d_15a:	..\..\armsys.c
+	$(CC) $(DCFLAGS) -D_main_redirect_c -DSTDFILE_REDIRECTION -o _main_redirect.o ..\..\armsys.c >> $(DEPLIST)
+d_15b:	..\..\handlers.s
+	$(AS) $(DAFLAGS) -PD "backtrace_enabled SETL {FALSE}" -o handlers.o ..\..\handlers.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_15c:	..\..\angel\kernel.s
+	$(AS) $(DAFLAGS) -PD "backtrace_enabled SETL {FALSE}" -o kernel.o ..\..\angel\kernel.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+d_15d:	..\..\angel\startup.s
+	$(AS) $(DAFLAGS)  -o startup.o ..\..\angel\startup.s
+	$(APPEND) $(MKTMP) >> $(DEPLIST)
+
+# START OF AUTO-GENERATED DEPENDENCIES
+# END OF AUTO-GENERATED DEPENDENCIES

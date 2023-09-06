@@ -1,0 +1,2 @@
+-li -asd -apcs 3/32bit/softfp/INTERWORK/nofp/noswst/narrow -ffah -zr16 
+-c -J..\..\..\include -I..\..,..\..\fplib,..\..\angel,..\..\stdh -DHOSTSEX_l -DINTERWORK -Dangel -Ospace -arch 4T 

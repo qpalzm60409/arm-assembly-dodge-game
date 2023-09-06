@@ -1,0 +1,2 @@
+-bi -asd -apcs 3/32bit/hardfp/fpregargs/NOINTERWORK/fp/swst/narrow -ffah -zr16 
+-c -J..\..\..\include -I..\..,..\..\fplib,..\..\angel,..\..\stdh -DHOSTSEX_b -DNOINTERWORK -Dangel -Otime -arch 3 

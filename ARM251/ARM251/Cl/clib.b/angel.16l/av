@@ -1,0 +1,2 @@
+-li -apcs 3/32bit/nofp/noswst -PD "NOINTERWORK SETL {TRUE}" -PD "angel SETL {TRUE}" -PD "thumb SETL {TRUE}" 
+-PD "FPIS SETA 3" -PD "LDM_MAX SETA 16" -I..\..,..\..\fpehead,..\..\fplib,..\..\thumb,..\..\angel -arch 4T 

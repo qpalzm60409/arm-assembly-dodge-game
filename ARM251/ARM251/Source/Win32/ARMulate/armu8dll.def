@@ -1,0 +1,18 @@
+; RCS $Revision: 1.7.26.1 $
+; Checkin $Date: 1998/12/13 00:11:37 $
+; Revising $Author: dcleland $
+;
+
+LIBRARY   ARMULATE
+
+CODE      LOADONCALL DISCARDABLE
+DATA      LOADONCALL SINGLE
+
+EXPORTS
+    WinRDI_Config
+    WinRDI_GetRDIProcVec
+    WinRDI_GetVersion
+    WinRDI_Get_DLL_Description @7
+    WinRDI_Valid_RDI_DLL       @8
+    WinRDI_Register_Yield_Callback @9
+    DllMain

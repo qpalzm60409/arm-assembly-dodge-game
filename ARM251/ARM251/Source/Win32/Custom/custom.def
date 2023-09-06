@@ -1,0 +1,15 @@
+; RCS $Revision: 1.3 $
+; Checkin $Date: 1998/07/23 12:18:25 $
+; Revising $Author: dearlam $
+;
+
+LIBRARY                 CUSTOM
+
+DESCRIPTION             'Resource DLL for ARM Windows Toolkit'
+CODE                    PRELOAD MOVEABLE DISCARDABLE
+DATA                    PRELOAD MOVEABLE SINGLE
+
+
+EXPORTS
+    DllMain
+
